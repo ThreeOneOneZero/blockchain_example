@@ -99,7 +99,7 @@ Após aplicar/usar a implementação por dificuldade cumulativa, os testes demon
 
 ## 6) Links
 
-- Repositório (público): https://github.com/TreeOneOneZero/blockchain_example
+- Repositório (público): https://github.com/ThreeOneOneZero/blockchain_example
 
 Fiz o trabalho em Docker para facilitar testes sem precisar de dupla física — cada container representa um nó.
 Também testei em outro computador, com uma rede separada.
