@@ -1,0 +1,36 @@
+services:
+  node-a:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: blockchain_node_a
+    ports:
+      - "5001:5001"
+    volumes:
+      - ../db:/app/db
+      - ../configs:/app/configs
+    networks:
+      - blockchain_network
+    command: python main.py configs/node_a_config_docker.json
+    stdin_open: true
+    tty: true
+
+  node-b:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: blockchain_node_b
+    ports:
+      - "5002:5001"
+    volumes:
+      - ../db:/app/db
+      - ../configs:/app/configs
+    networks:
+      - blockchain_network
+    command: python main.py configs/node_b_config_docker.json
+    stdin_open: true
+    tty: true
+
+networks:
+  blockchain_network:
+    driver: bridge

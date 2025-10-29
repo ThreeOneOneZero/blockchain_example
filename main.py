@@ -1,3 +1,4 @@
+import sys
 from typing import Dict, List
 
 from chain import (
@@ -24,8 +25,14 @@ if __name__ == "__main__":
         "blockchain_file": "db/blockchain.json", // arquivo para salvar blockchain
         "peers_file": "configs/peers.txt" // arquivo para listar os IPs dos demais pares
     }
+    
+    Uso:
+        python main.py                              # Usa configs/node_config.json
+        python main.py configs/node_a_config.json   # Usa config específico
     """
-    config = load_config()
+    # Aceita caminho do config como argumento (para Docker e terminal)
+    config_path = sys.argv[1] if len(sys.argv) > 1 else "configs/node_config.json"
+    config = load_config(config_path)
     blockchain = load_chain(config["blockchain_file"])
     transactions: List[Dict] = []
 
@@ -37,6 +44,7 @@ if __name__ == "__main__":
         transactions,
         config["blockchain_file"],
         on_valid_block_callback,
+        config["peers_file"],
     )
 
     print("=== SimpleCoin CLI ===")
@@ -71,6 +79,7 @@ if __name__ == "__main__":
                 config["blockchain_file"],
                 config["peers_file"],
                 config["port"],
+                on_valid_block_callback,
             )
 
         elif choice == "3":

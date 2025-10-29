@@ -3,7 +3,7 @@ import os
 from typing import List
 
 from block import Block, create_block, create_block_from_dict, create_genesis_block
-from network import broadcast_block, broadcast_transaction
+from network import broadcast_block, broadcast_transaction, sync_with_peers
 
 
 def load_chain(fpath: str) -> List[Block]:
@@ -20,6 +20,7 @@ def load_chain(fpath: str) -> List[Block]:
 
 
 def save_chain(fpath: str, chain: list[Block]):
+    os.makedirs(os.path.dirname(fpath), exist_ok=True)
     blockchain_serializable = []
     for b in chain:
         blockchain_serializable.append(b.as_dict())
@@ -49,6 +50,7 @@ def mine_block(
     blockchain_fpath: str,
     peers_fpath: str,
     port: int,
+    on_valid_block_callback=None,
 ):
     new_block = create_block(
         transactions,
@@ -62,7 +64,10 @@ def mine_block(
     transactions.clear()
     save_chain(blockchain_fpath, blockchain)
     broadcast_block(new_block, peers_fpath, port)
-    print(f"[✓] Block {new_block.index} mined and broadcasted.")
+    print(f"[OK] Block {new_block.index} mined and broadcasted.")
+    
+    if on_valid_block_callback:
+        sync_with_peers(blockchain, peers_fpath, port, blockchain_fpath, on_valid_block_callback)
 
 
 def make_transaction(sender, recipient, amount, transactions, peers_file, port):

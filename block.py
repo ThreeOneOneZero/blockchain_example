@@ -58,7 +58,7 @@ def create_block(
     reward: int,
     difficulty: int,
 ) -> Block:
-    print("[⛏️] Mining block...")
+    print("Mining block...")
     nonce = 0
     while True:
         coinbase = {"from": "network", "to": miner, "amount": reward}
@@ -67,7 +67,7 @@ def create_block(
         block = Block(index, str(datetime.utcnow()), all_tx, prev_hash, nonce, "")
         block.hash = hash_block(block)
         if block.hash.startswith("0" * difficulty):
-            print(f"[✓] Block mined: {block.hash}")
+            print(f"[OK] Block mined: {block.hash}")
             return block
         nonce += 1
 
@@ -75,6 +75,4 @@ def create_block(
 def hash_block(block: Block) -> str:
     block_copy = dict(block.as_dict())
     block_copy.pop("hash", None)
-    print(f"[HASHING] Hashing the block: ")
-    pp(block_copy)
     return hashlib.sha256(json.dumps(block_copy, sort_keys=True).encode()).hexdigest()
